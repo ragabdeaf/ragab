@@ -45,18 +45,16 @@ class IrAttachment(models.Model):
         """Supering the create function inorder to add the project and task
          corresponding to the attachment"""
         for vals in vals_list:
-            if 'project_id' in vals.keys() and not vals['task_id']:
+            if 'project_id' in vals and not vals.get('task_id'):
                 vals['res_id'] = vals['project_id']
                 vals['res_model'] = 'project.project'
-            elif 'project_id' in vals.keys() and vals['task_id']:
+            elif 'project_id' in vals and vals.get('task_id'):
                 vals['res_id'] = vals['task_id']
                 vals['res_model'] = 'project.task'
-            elif ('project_id' not in vals.keys() and vals['res_model'] ==
-                  'project.project'):
-                vals['project_id'] = vals['res_id']
+            elif 'project_id' not in vals and vals.get('res_model') == 'project.project':
+                vals['project_id'] = vals.get('res_id')
                 vals['attach_to'] = 'project'
-            elif 'task_id' not in vals.keys() and vals[
-                    'res_model'] == 'project.task':
-                vals['task_id'] = vals['res_id']
+            elif 'task_id' not in vals and vals.get('res_model') == 'project.task':
+                vals['task_id'] = vals.get('res_id')
                 vals['attach_to'] = 'task'
         return super().create(vals_list)
